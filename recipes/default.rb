@@ -1,0 +1,5 @@
+include_recipe 'chef_nginx::dependency_package'
+include_recipe 'chef_nginx::add_repo'
+include_recipe 'chef_nginx::install'
+include_recipe 'chef_nginx::configure'
+include_recipe 'chef_nginx::add_rails_sites'

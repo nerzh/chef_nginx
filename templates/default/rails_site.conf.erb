@@ -1,0 +1,45 @@
+upstream <%= @props['name'] %> {
+  server unix://<%= @props['app_dir'] %>/shared/puma.sock;
+}
+
+<% if @props['ssl_exist'] -%>
+server {
+  listen 80;
+  server_name <%= @props['name'] %> www.<%= @props['name'] %>;
+  return https://$host$request_uri;
+}
+<% end -%>
+<%= node['chef_nginx']['template']['ssl_redirect'] if @props['ssl_exist'] %>
+
+server {
+  <%= @props['ssl_exist'] ? node['chef_nginx']['template']['ssl_listen'] : node['chef_nginx']['template']['http_listen'] %>
+  server_name <%= @props['name'] %> www.<%= @props['name'] %>;
+  root <%= @props['app_dir'] %>/public;
+  
+  access_log  /var/log/nginx/<%= @props['name'] %>-access.log;
+  error_log /var/log/nginx/<%= @props['name'] %>-error.log;
+
+  <%= @props['crt'] if @props['ssl_exist'] %>
+  <%= @props['key'] if @props['ssl_exist'] %>
+
+<%= node['chef_nginx']['template']['ssl_props'] if @props['ssl_exist'] %>
+  
+  location ^~ /assets/ {
+    gzip_static on;
+    expires max;
+    add_header Cache-Control public;
+  }
+  try_files $uri/index.html $uri @<%= @props['name'] %>;
+
+  location @<%= @props['name'] %> {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Host $host;
+    proxy_redirect off;
+    proxy_pass http://<%= @props['name'] %>;
+  }
+
+  error_page 500 502 503 504 /500.html;
+  client_max_body_size 10M;
+  keepalive_timeout 10;
+}
