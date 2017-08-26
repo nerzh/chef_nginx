@@ -13,6 +13,11 @@ property :cert_path,     String
 action :add do
   app_dir = "/#{new_resource.root_path}/#{new_resource.user}/#{new_resource.projects_path}/#{new_resource.name}"
   
+  execute "restart-nginx" do
+    command "bash -lc 'service nginx restart'"
+    action :nothing
+  end
+
   directory app_dir do
     owner new_resource.user
     group new_resource.user
@@ -64,9 +69,7 @@ action :add do
     end
   end
 
-  service "nginx" do
-    action :start
-  end
+  notifies :run, "execute[restart-nginx]", :immediately
 end
 
 action_class do
