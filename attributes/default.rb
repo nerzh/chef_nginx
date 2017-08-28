@@ -6,6 +6,7 @@ default['chef_nginx']['root_path']         = 'home'
 default['chef_nginx']['projects_path']     = 'projects'
 default['chef_nginx']['ssl_exist']         = false
 default['chef_nginx']['cert_path']         = 'certificates'
+default['chef_nginx']['current_path']      = nil
 
 default['chef_nginx']['template']['ssl_props'] = <<QQ
   ssl_session_timeout 24h;

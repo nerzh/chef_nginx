@@ -9,9 +9,11 @@ property :user,          String, required: true
 property :projects_path, String
 property :ssl_exist,     [String, TrueClass, FalseClass], default: false
 property :cert_path,     String
+property :current_path,  [String, NilClass], default: nil
 
 action :add do
   app_dir = "/#{new_resource.root_path}/#{new_resource.user}/#{new_resource.projects_path}/#{new_resource.name}"
+  app_dir += "/#{new_resource.current_path}" if new_resource.current_path
   
   execute "restart-nginx" do
     command "bash -lc 'service nginx restart'"
