@@ -13,10 +13,6 @@ property :current_path,  [String, NilClass], default: nil
 property :socket_path,   [String, NilClass], default: nil
 property :static_path,   [String, NilClass], default: nil
 
-service "nginx" do
-  action :nothing
-end
-  
 action :add do
   app_dir     = "/#{new_resource.root_path}/#{new_resource.user}/#{new_resource.projects_path}/#{new_resource.name}"
   socket_path = "/#{app_dir}/shared/shared/puma.sock"
@@ -79,7 +75,9 @@ action :add do
     end
   end
 
-  notifies :restart, "service[nginx]", :immediately
+  execute 'restart-nginx' do
+    command "bash -lc 'service nginx restart'"
+  end
 end
 
 action_class do
