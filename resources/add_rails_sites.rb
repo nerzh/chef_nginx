@@ -13,6 +13,10 @@ property :current_path,  [String, NilClass], default: nil
 property :socket_path,   [String, NilClass], default: nil
 property :static_path,   [String, NilClass], default: nil
 
+service "nginx" do
+  action :nothing
+end
+  
 action :add do
   app_dir     = "/#{new_resource.root_path}/#{new_resource.user}/#{new_resource.projects_path}/#{new_resource.name}"
   socket_path = "/#{app_dir}/shared/shared/puma.sock"
@@ -21,10 +25,6 @@ action :add do
   app_dir     = new_resource.current_path if new_resource.current_path
   socket_path = new_resource.socket_path  if new_resource.socket_path
   static_path = new_resource.static_path  if new_resource.static_path
-  
-  service "nginx" do
-    action :nothing
-  end
 
   directory app_dir do
     owner new_resource.user
