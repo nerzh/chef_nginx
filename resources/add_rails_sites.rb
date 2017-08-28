@@ -18,12 +18,11 @@ action :add do
   socket_path = "/#{app_dir}/shared/shared/puma.sock"
   static_path = "/#{app_dir}/public"
   
-  app_dir     += new_resource.current_path if new_resource.current_path
-  socket_path += new_resource.socket_path if new_resource.socket_path
-  static_path += new_resource.static_path if new_resource.static_path
+  app_dir     = new_resource.current_path if new_resource.current_path
+  socket_path = new_resource.socket_path  if new_resource.socket_path
+  static_path = new_resource.static_path  if new_resource.static_path
   
-  execute "restart-nginx" do
-    command "bash -lc 'service nginx restart'"
+  service "nginx" do
     action :nothing
   end
 
@@ -80,7 +79,7 @@ action :add do
     end
   end
 
-  notifies :run, "execute[restart-nginx]", :immediately
+  notifies :restart, "service[nginx]", :immediately
 end
 
 action_class do
