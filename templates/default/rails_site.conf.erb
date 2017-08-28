@@ -1,5 +1,5 @@
 upstream <%= @props['name'] %> {
-  server unix://<%= @props['app_dir'] %>/shared/puma.sock;
+  server unix://<%= @props['socket_path'] %>;
 }
 
 <% if @props['ssl_exist'] -%>
@@ -14,7 +14,7 @@ server {
 server {
   <%= @props['ssl_exist'] ? node['chef_nginx']['template']['ssl_listen'] : node['chef_nginx']['template']['http_listen'] %>
   server_name <%= @props['name'] %> www.<%= @props['name'] %>;
-  root <%= @props['app_dir'] %>/public;
+  root <%= @props['static_path'] %>;
   
   access_log  /var/log/nginx/<%= @props['name'] %>-access.log;
   error_log /var/log/nginx/<%= @props['name'] %>-error.log;
