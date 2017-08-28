@@ -22,13 +22,13 @@ action :add do
   socket_path = new_resource.socket_path  if new_resource.socket_path
   static_path = new_resource.static_path  if new_resource.static_path
 
-  directory app_dir do
-    owner new_resource.user
-    group new_resource.user
-    mode  '0755'
-    recursive true
-    action :create
-  end
+  # directory app_dir do
+  #   owner new_resource.user
+  #   group new_resource.user
+  #   mode  '0755'
+  #   recursive true
+  #   action :create
+  # end
 
   template "/etc/nginx/sites-enabled/#{new_resource.name}.conf" do
     source 'rails_site.conf.erb'
