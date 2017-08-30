@@ -17,18 +17,13 @@ action :add do
   app_dir     = "/#{new_resource.root_path}/#{new_resource.user}/#{new_resource.projects_path}/#{new_resource.name}"
   socket_path = "/#{app_dir}/shared/shared/puma.sock"
   static_path = "/#{app_dir}/public"
+
+  secret      = Chef::EncryptedDataBagItem.load_secret("/root/chef_secret_key")
+  ssl_data    = Chef::EncryptedDataBagItem.load("chef_nginx_ssl_certificates", "#{new_resource.name}", secret)
   
   app_dir     = new_resource.current_path if new_resource.current_path
   socket_path = new_resource.socket_path  if new_resource.socket_path
   static_path = new_resource.static_path  if new_resource.static_path
-
-  # directory app_dir do
-  #   owner new_resource.user
-  #   group new_resource.user
-  #   mode  '0755'
-  #   recursive true
-  #   action :create
-  # end
 
   template "/etc/nginx/sites-enabled/#{new_resource.name}.conf" do
     source 'rails_site.conf.erb'
@@ -56,22 +51,18 @@ action :add do
       action :create
     end
 
-    template "/etc/nginx/ssl/#{new_resource.name}.key" do
-      cookbook 'chef_nginx_ssl_certificates'
-      source "#{new_resource.name}.key.erb"
-      owner  'root'
-      group  'root'
-      mode   '0644'
-      action :create
+    file "/etc/nginx/ssl/#{new_resource.name}.key" do
+      content "#{ssl_data['key']}"
+      mode '0644'
+      owner 'root'
+      group 'root'
     end
 
-    template "/etc/nginx/ssl/#{new_resource.name}.crt" do
-      cookbook 'chef_nginx_ssl_certificates'
-      source "#{new_resource.name}.crt.erb"
-      owner  'root'
-      group  'root'
-      mode   '0644'
-      action :create
+    file "/etc/nginx/ssl/#{new_resource.name}.crt" do
+      content "#{ssl_data['cert']}"
+      mode '0644'
+      owner 'root'
+      group 'root'
     end
   end
 
