@@ -12,7 +12,7 @@ property :cert_path,     [String, NilClass], default: nil
 property :current_path,  [String, NilClass], default: nil
 property :socket_path,   [String, NilClass], default: nil
 property :static_path,   [String, NilClass], default: nil
-property :add_adminer,   [String, NilClass], default: nil
+property :add_adminer,   [String, TrueClass, FalseClass], default: false
 
 action :add do
   app_dir     = "/#{new_resource.root_path}/#{new_resource.user}/#{new_resource.projects_path}/#{new_resource.name}"
