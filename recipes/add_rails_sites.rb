@@ -9,6 +9,9 @@ node['chef_nginx']['sites'].each do |sites|
       current_path  sites['apps'][site]['current_path'] if sites['apps'][site]['current_path']
       socket_path   sites['apps'][site]['socket_path']  if sites['apps'][site]['socket_path']
       static_path   sites['apps'][site]['static_path']  if sites['apps'][site]['static_path']
+      if sites['add_adminer_config_to_all_sites'].to_s == true or sites['apps'][site]['add_adminer_config'].to_s == true
+        add_adminer true
+      end
       action :add
     end
   end

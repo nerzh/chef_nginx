@@ -12,6 +12,7 @@ property :cert_path,     [String, NilClass], default: nil
 property :current_path,  [String, NilClass], default: nil
 property :socket_path,   [String, NilClass], default: nil
 property :static_path,   [String, NilClass], default: nil
+property :add_adminer,   [String, NilClass], default: nil
 
 action :add do
   app_dir     = "/#{new_resource.root_path}/#{new_resource.user}/#{new_resource.projects_path}/#{new_resource.name}"
@@ -37,7 +38,8 @@ action :add do
       "static_path" => static_path,
       "ssl_exist" => new_resource.ssl_exist,
       "crt" => "ssl_certificate /etc/nginx/ssl/#{new_resource.name}.crt;",
-      "key" => "ssl_certificate_key /etc/nginx/ssl/#{new_resource.name}.key;"
+      "key" => "ssl_certificate_key /etc/nginx/ssl/#{new_resource.name}.key;",
+      "add_adminer" => new_resource.add_adminer
     }
     action :create
   end

@@ -23,6 +23,8 @@ server {
   <%= @props['key'] if @props['ssl_exist'] %>
 
 <%= node['chef_nginx']['template']['ssl_props'] if @props['ssl_exist'] %>
+
+<%= node['chef_nginx']['template']['adminer'] if @props['add_adminer'] %>
   
   location ^~ /assets/ {
     gzip_static on;
