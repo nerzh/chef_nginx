@@ -20,7 +20,7 @@ action :add do
   static_path = "/#{app_dir}/public"
 
   secret      = Chef::EncryptedDataBagItem.load_secret("/root/chef_secret_key")
-  ssl_data    = Chef::EncryptedDataBagItem.load("chef_nginx_ssl_certificates", "#{new_resource.name}", secret)
+  ssl_data    = Chef::EncryptedDataBagItem.load("chef_nginx_ssl_certificates", "#{new_resource.name}", secret) if new_resource.ssl_exist
   
   app_dir     = new_resource.current_path if new_resource.current_path
   socket_path = new_resource.socket_path  if new_resource.socket_path
