@@ -36,7 +36,7 @@ action :add do
       "app_dir" => app_dir,
       "socket_path" => socket_path,
       "static_path" => static_path,
-      "ssl_exist" => new_resource.ssl_exist,
+      "ssl_exist" => (new_resource.ssl_exist.to_s == 'true'),
       "crt" => "ssl_certificate /etc/nginx/ssl/#{new_resource.name}.crt;",
       "key" => "ssl_certificate_key /etc/nginx/ssl/#{new_resource.name}.key;",
       "add_adminer" => new_resource.add_adminer
