@@ -13,6 +13,11 @@ action :install do
     version new_resource.version if new_resource.version
     action :install
   end
+
+  execute "restart NGINX" do
+    user 'root'
+    command %q(bash -lc "service nginx restart")
+  end
 end
 
 action_class do
