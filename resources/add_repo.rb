@@ -27,7 +27,7 @@ action :add do
   # end
 
   execute "make trust repo - apt-key" do
-    command "sudo apt-key adv --recv-keys --keyserver #{new_resource.keyserver} `sudo apt-get update 2>&1 | grep -o '[0-9A-Z]\{16\}$' | xargs`"
+    command "sudo apt-key adv --recv-keys --keyserver #{new_resource.keyserver} `sudo apt-get update 2>&1 | grep -o '[0-9A-Z]\\{16\\}$' | xargs`"
   end
 
   apt_update 'update'
