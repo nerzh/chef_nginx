@@ -39,9 +39,19 @@ action :add do
       "ssl_exist" => (new_resource.ssl_exist.to_s == 'true'),
       "crt" => "ssl_certificate /etc/nginx/ssl/#{new_resource.name}.crt;",
       "key" => "ssl_certificate_key /etc/nginx/ssl/#{new_resource.name}.key;",
-      "add_adminer" => new_resource.add_adminer
+      "add_adminer" => (new_resource.add_adminer.to_s == 'true')
     }
     action :create
+  end
+
+  if (new_resource.add_adminer.to_s == 'true')
+    template "/etc/nginx/fastcgi.conf" do
+      source 'fastcgi.conf.erb'
+      owner  'root'
+      group  'root'
+      mode   '0644'
+      action :create
+    end
   end
 
   if new_resource.ssl_exist.to_s == 'true'

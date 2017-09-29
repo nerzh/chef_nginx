@@ -33,7 +33,7 @@ location ~ \.php$ {
 
   set $path_info $fastcgi_path_info;
   fastcgi_param PATH_INFO $path_info;
-  include fastcgi_params;
+  include fastcgi.conf;
   fastcgi_pass unix:/run/php/php7.0-fpm.sock;
 }
 QQ
