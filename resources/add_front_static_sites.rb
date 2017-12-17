@@ -16,14 +16,12 @@ property :add_adminer,   [String, TrueClass, FalseClass], default: false
 
 action :add do
   app_dir     = "/#{new_resource.root_path}/#{new_resource.user}/#{new_resource.projects_path}/#{new_resource.name}"
-  # socket_path = "/#{app_dir}/shared/shared/puma.sock"
   static_path = "/#{app_dir}/public"
 
   secret      = Chef::EncryptedDataBagItem.load_secret("/root/chef_secret_key")
   ssl_data    = Chef::EncryptedDataBagItem.load("chef_nginx_ssl_certificates", "#{new_resource.name}", secret) if new_resource.ssl_exist.to_s == 'true'
   
   app_dir     = new_resource.current_path if new_resource.current_path
-  # socket_path = new_resource.socket_path  if new_resource.socket_path
   static_path = new_resource.static_path  if new_resource.static_path
 
   template "/etc/nginx/sites-enabled/#{new_resource.name}.conf" do
