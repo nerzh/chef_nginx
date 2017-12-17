@@ -11,7 +11,7 @@ default['chef_nginx']['socket_path']       = nil
 default['chef_nginx']['static_path']       = nil
 
 default['chef_nginx']['template']['ssl_props'] = <<QQ
-  ssl_session_timeout 24h;
+ssl_session_timeout 24h;
   ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
   ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
   ssl_prefer_server_ciphers on;
@@ -20,22 +20,22 @@ QQ
 
 default['chef_nginx']['template']['adminer'] = <<QQ
 location /adminer {
-  root /usr/local;
-  index index.html index.htm index.php index.nginx-debian.html;
-}
+    root /usr/local;
+    index index.html index.htm index.php index.nginx-debian.html;
+  }
 
 location ~ \.php$ {
-  root /usr/local;
-  fastcgi_split_path_info ^(.+\.php)(/.+)$;
-  
-  # Check that the PHP script exists before passing it
-  try_files $fastcgi_script_name =404;
+    root /usr/local;
+    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+    
+    # Check that the PHP script exists before passing it
+    try_files $fastcgi_script_name =404;
 
-  set $path_info $fastcgi_path_info;
-  fastcgi_param PATH_INFO $path_info;
-  include fastcgi.conf;
-  fastcgi_pass unix:/run/php/php7.0-fpm.sock;
-}
+    set $path_info $fastcgi_path_info;
+    fastcgi_param PATH_INFO $path_info;
+    include fastcgi.conf;
+    fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+  }
 QQ
 
 default['chef_nginx']['template']['ssl_listen']  = 'listen 443 ssl http2;'
