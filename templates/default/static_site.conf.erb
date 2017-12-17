@@ -26,16 +26,16 @@ server {
   <%= @props['crt'] if @props['ssl_exist'] %>
   <%= @props['key'] if @props['ssl_exist'] %>
 
-<%= node['chef_nginx']['template']['ssl_props'] if @props['ssl_exist'] %>
+  <%= node['chef_nginx']['template']['ssl_props'] if @props['ssl_exist'] %>
 
-<%= node['chef_nginx']['template']['adminer'] if @props['add_adminer'] %>
+  <%= node['chef_nginx']['template']['adminer'] if @props['add_adminer'] %>
   
   location / {
+    try_files $uri /index.html;
     gzip_static on;
     expires max;
     add_header Cache-Control public;
   }
-  try_files $uri/index.html $uri @<%= @props['name'] %>;
 
   error_page 500 502 503 504 /500.html;
   client_max_body_size 10M;
