@@ -15,16 +15,18 @@ property :static_path,   [String, NilClass], default: nil
 property :add_adminer,   [String, TrueClass, FalseClass], default: false
 
 action :add do
-  app_dir     = "/#{new_resource.root_path}/#{new_resource.user}/#{new_resource.projects_path}/#{new_resource.name}"
-  socket_path = "/#{app_dir}/shared/shared/puma.sock"
-  static_path = "/#{app_dir}/public"
+  app_dir        = "/#{new_resource.root_path}/#{new_resource.user}/#{new_resource.projects_path}/#{new_resource.name}"
+  socket_path    = "/#{app_dir}/shared/shared/puma.sock"
+  static_path    = "/#{app_dir}/public"
+  domain         = new_resource.name
+  dir_secret_key = "/root/#{app_name}_chef_secret_key"
 
-  secret      = Chef::EncryptedDataBagItem.load_secret("/root/chef_secret_key")
-  ssl_data    = Chef::EncryptedDataBagItem.load("chef_nginx_ssl_certificates", "#{new_resource.name}", secret) if new_resource.ssl_exist.to_s == 'true'
+  secret         = Chef::EncryptedDataBagItem.load_secret(dir_secret_key)
+  ssl_data       = Chef::EncryptedDataBagItem.load("chef_nginx_ssl_certificates", "#{new_resource.name}", secret) if new_resource.ssl_exist.to_s == 'true'
   
-  app_dir     = new_resource.current_path if new_resource.current_path
-  socket_path = new_resource.socket_path  if new_resource.socket_path
-  static_path = new_resource.static_path  if new_resource.static_path
+  app_dir        = new_resource.current_path if new_resource.current_path
+  socket_path    = new_resource.socket_path  if new_resource.socket_path
+  static_path    = new_resource.static_path  if new_resource.static_path
 
   template "/etc/nginx/sites-enabled/#{new_resource.name}.conf" do
     source 'rails_site.conf.erb'
