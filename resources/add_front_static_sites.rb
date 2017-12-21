@@ -18,7 +18,7 @@ action :add do
   app_dir        = "/#{new_resource.root_path}/#{new_resource.user}/#{new_resource.projects_path}/#{new_resource.name}"
   static_path    = "/#{app_dir}/public"
   domain         = new_resource.name
-  dir_secret_key = "/root/#{app_name}_chef_secret_key"
+  dir_secret_key = "/root/#{domain}_chef_secret_key"
 
   secret         = Chef::EncryptedDataBagItem.load_secret(dir_secret_key)
   ssl_data       = Chef::EncryptedDataBagItem.load("chef_nginx_ssl_certificates", "#{new_resource.name}", secret) if new_resource.ssl_exist.to_s == 'true'
