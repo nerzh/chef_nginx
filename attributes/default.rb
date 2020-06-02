@@ -39,4 +39,5 @@ location ~ \.php$ {
 QQ
 
 default['chef_nginx']['template']['ssl_listen']  = 'listen 443 ssl http2;'
+default['chef_nginx']['template']['ssl_hsts']    = 'add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;'
 default['chef_nginx']['template']['http_listen'] = 'listen 80;'
